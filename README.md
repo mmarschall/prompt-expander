@@ -1,6 +1,6 @@
 # Prompt Expander
 
-This project generates a package.yml file for Espanso from individual YAML prompt files. It uses a Jinja2 template to format the prompts and combines them into a single package.yml file.
+This project generates package files for Espanso from individual YAML prompt files. It uses Jinja2 templates to format the prompts into a package.yml file and creates a _manifest.yml file with the version from the VERSION file.
 
 ## Prerequisites
 
@@ -68,28 +68,34 @@ source: "https://www.linkedin.com/posts/jeremygrandillon_5-chatgpt-prompt-framew
 author: ""
 ```
 
-### Generating the package.yml File
+### Generating the Package Files
 
-Run the Python script to generate the package.yml file:
+Run the Python script to generate the package files:
 
 ```bash
 # Make sure the virtual environment is activated
 source venv/bin/activate
 
 # Run the script
-python generate_package.py
+python deploy.py
 ```
 
 This will:
 1. Read the version number from the `VERSION` file
 2. Read all YAML files from the `src/prompts` directory
-3. Process them using the Jinja2 template (`src/espanso-hub/package.yml.j2`)
-4. Generate the final package.yml file at `deploy/espanso-hub/packages/llm-prompts/<version>/package.yml` (where `<version>` is the content of the VERSION file)
+3. Process them using the Jinja2 templates:
+   - `src/espanso-hub/package.yml.j2` for the package.yml file
+   - `src/espanso-hub/_manifest.yml.j2` for the _manifest.yml file (using the version from the VERSION file)
+4. Generate the final files at `deploy/espanso-hub/packages/llm-prompts/<version>/` (where `<version>` is the content of the VERSION file)
 
 ## Project Structure
 
 - `src/prompts/`: Directory containing individual prompt YAML files
 - `src/espanso-hub/package.yml.j2`: Jinja2 template for the package.yml file
-- `generate_package.py`: Python script to generate the package.yml file
+- `src/espanso-hub/_manifest.yml.j2`: Jinja2 template for the _manifest.yml file
+- `deploy.py`: Python script to generate the package files
 - `VERSION`: Contains the current version number
-- `deploy/espanso-hub/packages/llm-prompts/<version>/package.yml`: Output file (where `<version>` is the content of the VERSION file)
+- `deploy/espanso-hub/packages/llm-prompts/<version>/`: Output directory containing:
+  - `package.yml`: Generated package file
+  - `_manifest.yml`: Generated manifest file with version from VERSION file
+  - `README.md`: Copied README file
