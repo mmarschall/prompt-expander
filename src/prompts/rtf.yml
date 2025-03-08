@@ -1,0 +1,8 @@
+trigger: ":rtf"
+replace: |
+             Role: $|$
+             Task: 
+             Format:
+label: "Role - Task - Format"
+source: https://www.linkedin.com/posts/jeremygrandillon_5-chatgpt-prompt-frameworks-that-make-your-activity-7301956962898837504-NR_i
+author: ""

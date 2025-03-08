@@ -1,0 +1,10 @@
+# You can use either :prompt to open a search menu or use the shortcut directly
+matches:
+{% for prompt in prompts %}
+{% if prompt.source %}# Source: {{ prompt.source }}{% endif %}
+ - triggers: [:prompt, :{{ prompt.trigger|replace(':','') }}]
+   replace: {% if '\n' in prompt.replace %}|
+             {{ prompt.replace|indent(13, first=False) }}{% else %}"{{ prompt.replace }}"{% endif %}
+{% if prompt.label %}   label: "{{ prompt.label }}"{% endif %}
+
+{% endfor %}
