@@ -131,3 +131,44 @@ In addition to Espanso, this project also generates a CSV file that can be impor
    - Click "Import" to complete the process.
 
 7. Your prompts are now available in TextExpander. You can use them by typing the trigger text (e.g., `:pirate`) and TextExpander will replace it with the corresponding prompt.
+
+## Using with Espanso
+
+This project generates an Espanso package that can be installed directly from the Espanso Hub. Here's how to install and use the package:
+
+### Installation
+
+1. Make sure you have [Espanso](https://espanso.org/) installed on your system.
+
+2. Install the package using the Espanso CLI:
+   ```bash
+   espanso install llm-prompts
+   ```
+
+   Alternatively, if you've generated the package locally:
+   ```bash
+   # First, generate the package files
+   python deploy.py
+   
+   # Then, install the package from the local directory
+   espanso package install --path deploy/espanso-hub/packages/llm-prompts/0.1.0/
+   ```
+
+### Usage
+
+Once installed, you can use the prompts in two ways:
+
+1. Type `:prompt` to open a search menu with all available prompts
+2. Use the specific trigger for each prompt directly (e.g., `:rtf`, `:bab`, `:pirate`)
+
+After inserting a prompt template, fill in the details as needed. The cursor will be positioned at the first input field.
+
+### Available Prompts
+
+The package includes various prompt templates for different purposes:
+
+- Simple prompts like `:pirate`
+- Structured frameworks like Role-Task-Format (`:rtf`), Before-After-Bridge (`:bab`), and Situation-Complication-Question-Answer (`:scqa`)
+- Special purpose prompts for goal setting (`:goals`), abundance mindset (`:abundance`), and startup evaluation (`:startup`)
+
+For a complete list of available prompts and their descriptions, refer to the YAML files in the `prompts` directory.
