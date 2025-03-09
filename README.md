@@ -44,7 +44,7 @@ pip install pyyaml jinja2
 
 ### Adding Prompt Files
 
-Create YAML files in the `src/prompts` directory with the following structure:
+Create YAML files in the `prompts` directory with the following structure:
 
 ```yaml
 trigger: ":shortcut"
@@ -56,7 +56,7 @@ source: "Optional source URL"
 author: "Optional author name"
 ```
 
-Example (`src/prompts/rtf.yml`):
+Example (`prompts/rtf.yml`):
 ```yaml
 trigger: ":rtf"
 replace: |
@@ -82,20 +82,52 @@ python deploy.py
 
 This will:
 1. Read the version number from the `VERSION` file
-2. Read all YAML files from the `src/prompts` directory
+2. Read all YAML files from the `prompts` directory
 3. Process them using the Jinja2 templates:
    - `src/espanso-hub/package.yml.j2` for the package.yml file
    - `src/espanso-hub/_manifest.yml.j2` for the _manifest.yml file (using the version from the VERSION file)
-4. Generate the final files at `deploy/espanso-hub/packages/llm-prompts/<version>/` (where `<version>` is the content of the VERSION file)
+   - `src/textexpander/llm-prompts.csv.j2` for the TextExpander CSV file
+4. Generate the final files:
+   - Espanso files at `deploy/espanso-hub/packages/llm-prompts/<version>/` (where `<version>` is the content of the VERSION file)
+   - TextExpander CSV file at `deploy/textexpander/llm-prompts.csv`
 
 ## Project Structure
 
-- `src/prompts/`: Directory containing individual prompt YAML files
+- `prompts/`: Directory containing individual prompt YAML files
 - `src/espanso-hub/package.yml.j2`: Jinja2 template for the package.yml file
 - `src/espanso-hub/_manifest.yml.j2`: Jinja2 template for the _manifest.yml file
+- `src/textexpander/llm-prompts.csv.j2`: Jinja2 template for the TextExpander CSV file
 - `deploy.py`: Python script to generate the package files
 - `VERSION`: Contains the current version number
-- `deploy/espanso-hub/packages/llm-prompts/<version>/`: Output directory containing:
+- `deploy/espanso-hub/packages/llm-prompts/<version>/`: Output directory for Espanso files containing:
   - `package.yml`: Generated package file
   - `_manifest.yml`: Generated manifest file with version from VERSION file
   - `README.md`: Copied README file
+- `deploy/textexpander/llm-prompts.csv`: Generated CSV file for TextExpander
+
+## Using with TextExpander
+
+In addition to Espanso, this project also generates a CSV file that can be imported into TextExpander. Here's how to import the CSV file:
+
+1. Run the deploy script to generate the CSV file:
+   ```bash
+   python deploy.py
+   ```
+
+2. Open TextExpander on your computer.
+
+3. Go to File > Import > Snippets...
+
+4. Select "Tab-delimited text or CSV file" from the import options.
+
+5. Navigate to the `deploy/textexpander/llm-prompts.csv` file and select it.
+
+6. In the import dialog:
+   - Make sure the columns are correctly mapped:
+     - First column: Abbreviation
+     - Second column: Content
+     - Third column: Label
+   - Choose whether to import into an existing group or create a new group.
+   - Click "Import" to complete the process.
+
+7. Your prompts are now available in TextExpander. You can use them by typing the trigger text (e.g., `:pirate`) and TextExpander will replace it with the corresponding prompt.
