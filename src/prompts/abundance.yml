@@ -1,0 +1,12 @@
+trigger: ":abundance"
+replace: |
+             Context: I believe that acting from a mindset of abundance instead of scarcity will lead to more success.
+             An abundance mindset is grateful, optimistic and believes there is more to go around. 
+             A scarcity mindset operates from lack, and believes in protecting what you have, and playing zero sum games.
+             Step 1: Create a 8 question quiz where you test which mindset I have right now.
+             Use multiple choice questions with 5 options for each answer, ensuring there isn’t an obviously scarce or abundant option and the options randomly mixed.
+             Step 2: Ask for my input and wait for my input. Only proceed after I have given my input. Don't give the input yourself.
+             Step 3: Analyze my input: After I provide my answers, give me the results.
+             Step 4: make an assessment and suggest ways I can act from abundance more often, based on my answers. Propose concrete things to make an abundance mindset a habit for the areas where I have room to improve.
+source: https://www.forbes.com/sites/jodiecook/2024/07/23/5-chatgpt-prompts-to-accelerate-your-success-make-leapfrog-moves/
+# modified to avoid Gemini 2 to answer the questions itself, randomize the order of options and focus the analysis and proposals on the outcomes, which lack an abundance mindset

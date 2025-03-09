@@ -2,6 +2,6 @@ name: "llm-prompts"
 title: "LLM Prompts"
 description: A package with helpful prompts for AI Chat and LLMs like ChatGPT, Gemini, Claude, ...
 homepage: https://github.com/mmarschall/prompt-expander
-version: 0.2.0
+version: 0.1.0
 author: Matthias Marschall
 tags: ["AI","LLM", "Prompt", "GenAI"]

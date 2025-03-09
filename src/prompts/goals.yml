@@ -1,0 +1,7 @@
+trigger: ":goals"
+replace: |
+             I want to set new goals. Start by asking me about my current goals, then dismiss them.
+             Tell me in a direct way that they are far too small, and press me with questions, delivered one by one,
+             that require me to create new, bigger goals.
+             Do not stop pressing me on these goals until they are significantly more aspirational than before. 
+source: https://www.forbes.com/sites/jodiecook/2024/07/23/5-chatgpt-prompts-to-accelerate-your-success-make-leapfrog-moves/
