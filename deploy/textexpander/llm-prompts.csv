@@ -16,7 +16,7 @@ Please provide a score out of 10 for each factor and conclude with your overall 
 Task: 
 Format:
 ","Role - Task - Format"
-":pirate","Speak like a pirate. ",""
+":pirate","Speak like a pirate. ","pirate"
 ":abundance","Context: I believe that acting from a mindset of abundance instead of scarcity will lead to more success.
 An abundance mindset is grateful, optimistic and believes there is more to go around. 
 A scarcity mindset operates from lack, and believes in protecting what you have, and playing zero sum games.

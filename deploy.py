@@ -12,9 +12,6 @@ def load_yaml_files(directory):
             filepath = os.path.join(directory, filename)
             with open(filepath, 'r') as file:
                 prompt_data = yaml.safe_load(file)
-                # Ensure the trigger doesn't have a colon prefix in the data structure
-                if 'trigger' in prompt_data and prompt_data['trigger'].startswith(':'):
-                    prompt_data['trigger'] = prompt_data['trigger'][1:]
                 prompts.append(prompt_data)
     return prompts
 
@@ -46,7 +43,7 @@ def main():
     version = get_version()
     
     # Paths
-    prompts_dir = 'src/prompts'
+    prompts_dir = 'prompts'
     template_path = 'src/espanso-hub/package.yml.j2'
     output_dir = f'deploy/espanso-hub/packages/llm-prompts/{version}'
     output_path = f'{output_dir}/package.yml'
