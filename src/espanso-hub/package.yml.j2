@@ -6,5 +6,4 @@ matches:
    replace: {% if '\n' in prompt.replace %}|
              {{ prompt.replace|indent(13, first=False) }}{% else %}"{{ prompt.replace }}"{% endif %}
 {% if prompt.label %}   label: "{{ prompt.label }}"{% endif %}
-
 {% endfor %}
