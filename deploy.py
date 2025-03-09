@@ -57,6 +57,18 @@ def main():
     # Load YAML files
     prompts = load_yaml_files(prompts_dir)
     
+    # Add filename as a property for each prompt (for use in templates)
+    for i, prompt in enumerate(prompts):
+        # Find the filename for this prompt
+        for filename in os.listdir(prompts_dir):
+            if filename.endswith('.yml'):
+                filepath = os.path.join(prompts_dir, filename)
+                with open(filepath, 'r') as file:
+                    data = yaml.safe_load(file)
+                    if data.get('trigger') == prompt.get('trigger'):
+                        prompts[i]['_filename'] = os.path.splitext(filename)[0]
+                        break
+    
     # Render package.yml template
     package_context = {'prompts': prompts}
     package_output = render_template(template_path, package_context)
@@ -76,7 +88,20 @@ def main():
         file.write(manifest_output)
     copy_file('src/espanso-hub/README.md', f'{output_dir}/README.md')
     
+    # Render TextExpander CSV template
+    textexpander_template_path = 'src/textexpander/llm-prompts.csv.j2'
+    textexpander_output_path = 'deploy/textexpander/llm-prompts.csv'
+    textexpander_output = render_template(textexpander_template_path, package_context)
+    
+    # Create output directory if it doesn't exist
+    os.makedirs(os.path.dirname(textexpander_output_path), exist_ok=True)
+    
+    # Write TextExpander CSV output to file
+    with open(textexpander_output_path, 'w') as file:
+        file.write(textexpander_output)
+    
     print(f"Generated {output_path} successfully!")
+    print(f"Generated {textexpander_output_path} successfully!")
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,2 @@
+{% for prompt in prompts %}{% if prompt.trigger %}{% set shortcut = ":" + prompt.trigger %}{% else %}{% set shortcut = "" %}{% endif %}{% set expanded_text = prompt.replace|replace('"', '""') %}{% set description = prompt.label|default(prompt.source|default(prompt._filename|default(''))) %}"{{ shortcut }}","{{ expanded_text }}","{{ description }}"
+{% endfor %}

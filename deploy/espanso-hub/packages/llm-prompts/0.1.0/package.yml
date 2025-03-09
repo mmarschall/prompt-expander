@@ -10,7 +10,6 @@ matches:
 
    label: "Before - After - Bridge"
 
-
 # Source: https://www.linkedin.com/posts/jeremygrandillon_5-chatgpt-prompt-frameworks-that-make-your-activity-7301956962898837504-NR_i
  - triggers: [":prompt", ":scqa"]
    replace: |
@@ -21,7 +20,6 @@ matches:
 
    label: "Situation - Complication - Question - Answer"
 
-
 # Source: https://github.com/f/awesome-chatgpt-prompts/pull/828
  - triggers: [":prompt", ":startup"]
    replace: |
@@ -29,7 +27,6 @@ matches:
              You will analyze potential startup pitches, provide feedback, and assess their viability for investment.
              I will describe a startup idea or pitch, and you will evaluate it based on factors such as market potential, scalability, competitive landscape, and team competence.
              Please provide a score out of 10 for each factor and conclude with your overall thoughts on whether you would invest and why.
-
 
 
 
@@ -43,10 +40,8 @@ matches:
    label: "Role - Task - Format"
 
 
-
  - triggers: [":prompt", ":pirate"]
    replace: "Speak like a pirate. "
-
 
 
 # Source: https://www.forbes.com/sites/jodiecook/2024/07/23/5-chatgpt-prompts-to-accelerate-your-success-make-leapfrog-moves/
@@ -63,7 +58,6 @@ matches:
 
 
 
-
 # Source: https://www.forbes.com/sites/jodiecook/2024/07/23/5-chatgpt-prompts-to-accelerate-your-success-make-leapfrog-moves/
  - triggers: [":prompt", ":goals"]
    replace: |
@@ -71,6 +65,5 @@ matches:
              Tell me in a direct way that they are far too small, and press me with questions, delivered one by one,
              that require me to create new, bigger goals.
              Do not stop pressing me on these goals until they are significantly more aspirational than before. 
-
 
 
