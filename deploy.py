@@ -2,6 +2,7 @@
 import os
 import yaml
 import shutil
+import sys
 from jinja2 import Template, Environment, FileSystemLoader
 
 def load_yaml_files(directory):
@@ -109,11 +110,22 @@ def main():
     prompts_dir = 'prompts'
     prompts = load_yaml_files(prompts_dir)
     
-    # Deploy espanso package
-    deploy_espanso_package(prompts, version)
+    # Check command line arguments
+    deploy_espanso = True
+    deploy_textexpander = True
     
-    # Deploy TextExpander CSV
-    deploy_textexpander_csv(prompts)
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "--espanso":
+            deploy_textexpander = False
+        elif sys.argv[1] == "--textexpander":
+            deploy_espanso = False
+    
+    # Deploy based on arguments
+    if deploy_espanso:
+        deploy_espanso_package(prompts, version)
+    
+    if deploy_textexpander:
+        deploy_textexpander_csv(prompts)
 
 if __name__ == "__main__":
     main()

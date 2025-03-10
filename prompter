@@ -1,0 +1,221 @@
+#!/bin/bash
+
+# prompter - CLI tool for deploying prompt packages
+# Usage: ./prompter [command] [subcommand] [options]
+
+set -e
+
+# Constants
+VERSION_FILE="VERSION"
+PYTHON_SCRIPT="deploy.py"
+ESPANSO_DEPLOY_DIR="deploy/espanso-hub/packages/llm-prompts"
+TEXTEXPANDER_DEPLOY_FILE="deploy/textexpander/llm-prompts.csv"
+
+# Function to display help
+show_help() {
+    echo "Usage: ./prompter [command] [subcommand] [options]"
+    echo ""
+    echo "Commands:"
+    echo "  deploy [espanso|textexpander] [--clean|-c]"
+    echo "      Deploy to both platforms or the specified platform"
+    echo "      --clean, -c: Clean existing files before deploying"
+    echo ""
+    echo "  clean [espanso|textexpander]"
+    echo "      Clean deployed files for both platforms or the specified platform"
+    echo "      For espanso: Cleans ALL versions by default"
+    echo "      For espanso: --version, -v <version>: Clean only the specified version"
+    echo ""
+    echo "  version [<new-version>]"
+    echo "      Display current version or set a new version"
+    echo ""
+    echo "  help"
+    echo "      Display this help message"
+    echo ""
+    echo "Global Options:"
+    echo "  --version, -v"
+    echo "      Display current version (equivalent to 'version' command)"
+    echo ""
+    echo "Examples:"
+    echo "  ./prompter deploy                     # Deploy to both platforms"
+    echo "  ./prompter deploy -c                  # Deploy to both platforms, cleaning first"
+    echo "  ./prompter deploy espanso             # Deploy only to Espanso"
+    echo "  ./prompter deploy textexpander -c     # Deploy to TextExpander, cleaning first"
+    echo "  ./prompter clean espanso              # Clean ALL Espanso versions"
+    echo "  ./prompter clean espanso -v 0.1.0     # Clean specific Espanso version"
+    echo "  ./prompter clean                      # Clean all platforms"
+    echo "  ./prompter version                    # Display current version"
+    echo "  ./prompter version 1.2.0              # Set version to 1.2.0"
+    echo "  ./prompter -v                         # Display current version"
+}
+
+# Function to get current version
+get_version() {
+    if [ -f "$VERSION_FILE" ]; then
+        cat "$VERSION_FILE"
+    else
+        echo "0.1.0"
+        echo "WARNING: VERSION file not found. Using default version 0.1.0." >&2
+    fi
+}
+
+# Function to set version
+set_version() {
+    echo "$1" > "$VERSION_FILE"
+    echo "Version set to $1"
+}
+
+# Function to deploy
+deploy() {
+    local platform="$1"
+    local clean="$2"
+    local version=$(get_version)
+    
+    # Clean if requested
+    if [ "$clean" = "true" ]; then
+        clean_deployment "$platform" "$version"
+    fi
+    
+    # Deploy based on platform
+    case "$platform" in
+        "espanso")
+            echo "Deploying to Espanso (version $version)..."
+            python3 "$PYTHON_SCRIPT" --espanso
+            ;;
+        "textexpander")
+            echo "Deploying to TextExpander..."
+            python3 "$PYTHON_SCRIPT" --textexpander
+            ;;
+        *)
+            echo "Deploying to all platforms..."
+            python3 "$PYTHON_SCRIPT"
+            ;;
+    esac
+    
+    echo "Deployment complete!"
+}
+
+# Function to clean deployment
+clean_deployment() {
+    local platform="$1"
+    local version="$2"
+    
+    case "$platform" in
+        "espanso")
+            if [ -n "$version" ]; then
+                echo "Cleaning Espanso deployment for version $version..."
+                rm -rf "$ESPANSO_DEPLOY_DIR/$version"
+            else
+                echo "Cleaning ALL Espanso deployments..."
+                rm -rf "$ESPANSO_DEPLOY_DIR"
+                mkdir -p "$ESPANSO_DEPLOY_DIR"
+            fi
+            ;;
+        "textexpander")
+            echo "Cleaning TextExpander deployment..."
+            rm -f "$TEXTEXPANDER_DEPLOY_FILE"
+            ;;
+        *)
+            echo "Cleaning all deployments..."
+            rm -rf "$ESPANSO_DEPLOY_DIR"
+            mkdir -p "$ESPANSO_DEPLOY_DIR"
+            rm -f "$TEXTEXPANDER_DEPLOY_FILE"
+            ;;
+    esac
+    
+    echo "Clean complete!"
+}
+
+# Parse command line arguments
+if [ $# -eq 0 ]; then
+    show_help
+    exit 0
+fi
+
+# Check for global version flag
+if [ "$1" = "--version" ] || [ "$1" = "-v" ]; then
+    echo "Version: $(get_version)"
+    exit 0
+fi
+
+# Process commands
+case "$1" in
+    "deploy")
+        platform="all"
+        clean="false"
+        
+        # Check for platform subcommand
+        if [ $# -ge 2 ]; then
+            case "$2" in
+                "espanso"|"textexpander")
+                    platform="$2"
+                    shift
+                    ;;
+            esac
+        fi
+        
+        # Check for --clean/-c option
+        while [ $# -gt 1 ]; do
+            case "$2" in
+                "--clean"|"-c")
+                    clean="true"
+                    shift
+                    ;;
+                *)
+                    shift
+                    ;;
+            esac
+        done
+        
+        deploy "$platform" "$clean"
+        ;;
+        
+    "clean")
+        platform="all"
+        specific_version=""
+        
+        # Check for platform subcommand
+        if [ $# -ge 2 ]; then
+            case "$2" in
+                "espanso"|"textexpander")
+                    platform="$2"
+                    shift
+                    
+                    # Check for --version/-v option for espanso
+                    if [ "$platform" = "espanso" ] && [ $# -gt 1 ]; then
+                        if [ "$2" = "--version" ] || [ "$2" = "-v" ]; then
+                            if [ $# -gt 2 ]; then
+                                specific_version="$3"
+                            else
+                                echo "Error: Version number required with --version/-v option"
+                                exit 1
+                            fi
+                        fi
+                    fi
+                    ;;
+            esac
+        fi
+        
+        clean_deployment "$platform" "$specific_version"
+        ;;
+        
+    "version")
+        if [ $# -eq 1 ]; then
+            echo "Version: $(get_version)"
+        else
+            set_version "$2"
+        fi
+        ;;
+        
+    "help")
+        show_help
+        ;;
+        
+    *)
+        echo "Error: Unknown command '$1'"
+        echo ""
+        show_help
+        exit 1
+        ;;
+esac
+
+exit 0
