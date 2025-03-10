@@ -70,14 +70,14 @@ author: ""
 
 ### Generating the Package Files
 
-Run the Python script to generate the package files:
+Use the `prompter` CLI tool to generate the package files:
 
 ```bash
 # Make sure the virtual environment is activated
 source venv/bin/activate
 
 # Run the script
-python deploy.py
+./prompter deploy
 ```
 
 This will:
@@ -91,13 +91,54 @@ This will:
    - Espanso files at `deploy/espanso-hub/packages/llm-prompts/<version>/` (where `<version>` is the content of the VERSION file)
    - TextExpander CSV file at `deploy/textexpander/llm-prompts.csv`
 
+### CLI Tool Usage
+
+The project includes a command-line tool called `prompter` that provides various commands for managing and deploying prompt packages:
+
+```bash
+./prompter [command] [subcommand] [options]
+```
+
+Available commands:
+
+- **Deploy commands**:
+  ```bash
+  ./prompter deploy                     # Deploy to both platforms
+  ./prompter deploy -c                  # Deploy to both platforms, cleaning first
+  ./prompter deploy espanso             # Deploy only to Espanso
+  ./prompter deploy textexpander        # Deploy only to TextExpander
+  ```
+
+- **Clean commands**:
+  ```bash
+  ./prompter clean                      # Clean all platforms
+  ./prompter clean espanso              # Clean ALL Espanso versions
+  ./prompter clean espanso -v 0.1.0     # Clean specific Espanso version
+  ./prompter clean textexpander         # Clean TextExpander
+  ```
+
+- **Version commands**:
+  ```bash
+  ./prompter version                    # Display current version
+  ./prompter version 1.2.0              # Set version to 1.2.0
+  ./prompter -v                         # Display current version
+  ```
+
+- **Help command**:
+  ```bash
+  ./prompter help                       # Display help information
+  ```
+
+For more information, run `./prompter help`.
+
 ## Project Structure
 
 - `prompts/`: Directory containing individual prompt YAML files
 - `src/espanso-hub/package.yml.j2`: Jinja2 template for the package.yml file
 - `src/espanso-hub/_manifest.yml.j2`: Jinja2 template for the _manifest.yml file
 - `src/textexpander/llm-prompts.csv.j2`: Jinja2 template for the TextExpander CSV file
-- `deploy.py`: Python script to generate the package files
+- `prompter`: CLI tool for deploying prompt packages
+- `src/deploy.py`: Python script used by the CLI tool
 - `VERSION`: Contains the current version number
 - `deploy/espanso-hub/packages/llm-prompts/<version>/`: Output directory for Espanso files containing:
   - `package.yml`: Generated package file
@@ -111,7 +152,7 @@ In addition to Espanso, this project also generates a CSV file that can be impor
 
 1. Run the deploy script to generate the CSV file:
    ```bash
-   python deploy.py
+   ./prompter deploy textexpander
    ```
 
 2. Open TextExpander on your computer.
@@ -148,7 +189,7 @@ This project generates an Espanso package that can be installed directly from th
    Alternatively, if you've generated the package locally:
    ```bash
    # First, generate the package files
-   python deploy.py
+   ./prompter deploy espanso
    
    # Then, install the package from the local directory
    espanso package install --path deploy/espanso-hub/packages/llm-prompts/0.1.0/

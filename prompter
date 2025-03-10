@@ -7,7 +7,7 @@ set -e
 
 # Constants
 VERSION_FILE="VERSION"
-PYTHON_SCRIPT="deploy.py"
+PYTHON_SCRIPT="src/deploy.py"
 ESPANSO_DEPLOY_DIR="deploy/espanso-hub/packages/llm-prompts"
 TEXTEXPANDER_DEPLOY_FILE="deploy/textexpander/llm-prompts.csv"
 
