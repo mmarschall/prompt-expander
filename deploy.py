@@ -38,33 +38,21 @@ def copy_file(source_path, dest_path):
     shutil.copy(source_path, dest_path)
     print(f"Copied {source_path} to {dest_path}")
 
-def main():
-    # Get version
-    version = get_version()
+def deploy_espanso_package(prompts, version):
+    """
+    Deploy the espanso package with the given prompts and version.
     
+    Args:
+        prompts: List of prompt data loaded from YAML files
+        version: Version string for the package
+    """
     # Paths
-    prompts_dir = 'prompts'
     template_path = 'src/espanso-hub/package.yml.j2'
     output_dir = f'deploy/espanso-hub/packages/llm-prompts/{version}'
     output_path = f'{output_dir}/package.yml'
     
     # Create output directory if it doesn't exist
     os.makedirs(output_dir, exist_ok=True)
-    
-    # Load YAML files
-    prompts = load_yaml_files(prompts_dir)
-    
-    # Add filename as a property for each prompt (for use in templates)
-    for i, prompt in enumerate(prompts):
-        # Find the filename for this prompt
-        for filename in os.listdir(prompts_dir):
-            if filename.endswith('.yml'):
-                filepath = os.path.join(prompts_dir, filename)
-                with open(filepath, 'r') as file:
-                    data = yaml.safe_load(file)
-                    if data.get('trigger') == prompt.get('trigger'):
-                        prompts[i]['_filename'] = os.path.splitext(filename)[0]
-                        break
     
     # Render package.yml template
     package_context = {'prompts': prompts}
@@ -83,11 +71,25 @@ def main():
     manifest_output_path = f'{output_dir}/_manifest.yml'
     with open(manifest_output_path, 'w') as file:
         file.write(manifest_output)
+    
+    # Copy README file
     copy_file('src/espanso-hub/README.md', f'{output_dir}/README.md')
     
-    # Render TextExpander CSV template
+    print(f"Generated {output_path} successfully!")
+
+def deploy_textexpander_csv(prompts):
+    """
+    Deploy the TextExpander CSV with the given prompts.
+    
+    Args:
+        prompts: List of prompt data loaded from YAML files
+    """
+    # Paths
     textexpander_template_path = 'src/textexpander/llm-prompts.csv.j2'
     textexpander_output_path = 'deploy/textexpander/llm-prompts.csv'
+    
+    # Render TextExpander CSV template
+    package_context = {'prompts': prompts}
     textexpander_output = render_template(textexpander_template_path, package_context)
     
     # Create output directory if it doesn't exist
@@ -97,8 +99,21 @@ def main():
     with open(textexpander_output_path, 'w') as file:
         file.write(textexpander_output)
     
-    print(f"Generated {output_path} successfully!")
     print(f"Generated {textexpander_output_path} successfully!")
+
+def main():
+    # Get version
+    version = get_version()
+    
+    # Load YAML files from prompts directory
+    prompts_dir = 'prompts'
+    prompts = load_yaml_files(prompts_dir)
+    
+    # Deploy espanso package
+    deploy_espanso_package(prompts, version)
+    
+    # Deploy TextExpander CSV
+    deploy_textexpander_csv(prompts)
 
 if __name__ == "__main__":
     main()
