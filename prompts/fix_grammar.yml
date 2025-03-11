@@ -1,0 +1,9 @@
+trigger: ":grammar"
+replace: |
+          Correct the grammar of the given text.
+          Return a table with one row for each sentence for which you propose a change.
+          In the first column put the original text and mark every error you found in bold.
+          In the second column put the proposed text. Format every change in bold.
+
+          After the table, just print the corrected text, using only the formatting, which was in the original text.
+author: "Matthias Marschall"

@@ -12,6 +12,13 @@ You will analyze potential startup pitches, provide feedback, and assess their v
 I will describe a startup idea or pitch, and you will evaluate it based on factors such as market potential, scalability, competitive landscape, and team competence.
 Please provide a score out of 10 for each factor and conclude with your overall thoughts on whether you would invest and why.
 ","https://github.com/f/awesome-chatgpt-prompts/pull/828"
+":grammar","Correct the grammar of the given text.
+Return a table with one row for each sentence for which you propose a change.
+In the first column put the original text and mark every error you found in bold.
+In the second column put the proposed text. Format every change in bold.
+
+After the table, just print the corrected text, using only the formatting, which was in the original text.
+",""
 ":rtf","Role: $|$
 Task: 
 Format:
